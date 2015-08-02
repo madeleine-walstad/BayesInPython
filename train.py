@@ -1,8 +1,8 @@
 from suite import suite
 import numpy as np
-import matplotlib.pyplot as mpl
 from pmf import pmf
 import sys
+from util import util
 
 class Train(suite):
 
@@ -21,15 +21,6 @@ class Train(suite):
 		if shouldPrint:
 			print(str(total))
 		return total
-
-	def plot(self):
-		x = self.hypotheses
-		y = []
-		for i in x:
-			name = str(i)
-			y.append(super().prob(i))
-		mpl.plot(x, y)
-		mpl.show()
 
 	def get_probability_distribution(self):
 		y = []
@@ -53,43 +44,6 @@ class Train(suite):
 			if total >= p:
 				return value
 
-
-class PowerTrain(Train):
-
-	def __init__(self, hypotheses, alpha=1.0):
-		pmf.__init__(self)
-		self.hypotheses = hypotheses
-		self.key_type = suite.TYPE_INT
-		for hypothesis in hypotheses:
-			self.set(hypothesis, hypothesis**(-alpha))
-		self.normalize()
-
-
-def plot(xs, ys, labels=[]):
-	""" plot: plots several distributions on the same graph
-
-
-		:param xs: an array of arrays giving the x coordinates for each distribution to plot
-		:param ys: an array of arrays giving the y coordinates for each distribution to plot
-	"""
-
-	if len(xs) != len(ys):
-		print('Invalid input. ' + str(len(xs)) + ' does not equal ' + str(len(ys)))
-
-	if len(labels) != len(xs):
-		print('Invalid labels. Autogenerating labels...')
-		labels = []
-		for index, x in enumerate(xs):
-			labels.append(str(x))
-
-	plots =[]
-
-	for index, x_distribution in enumerate(xs):
-		y_distribution = ys[index]
-		plot, = (mpl.plot(x_distribution, y_distribution, label=labels[index]))
-		plots.append(plot)
-	mpl.legend(handles=plots)
-	mpl.show()
 
 def power_prior_function(x, alpha=1.0):
 	return x ** (-alpha)
@@ -118,7 +72,7 @@ does the railroad have?""")
 	xs = [hypotheses, hypotheses]
 	ys = [train.get_probability_distribution(), train2.get_probability_distribution()]
 	if showPlots == 'all':
-		plot(xs, ys, ['uniform', 'power law'])
+		util.plot(xs, ys, ['uniform', 'power law'])
 
 
 	### with more data the spread between the uniform and power distributions is smaller
@@ -130,13 +84,13 @@ does the railroad have?""")
 		train4.update(d)
 	ys_more_data = [train3.get_probability_distribution(), train4.get_probability_distribution()]
 	if showPlots == 'all':
-		plot(xs, ys_more_data, ['uniform, more data', 'power law, more data']) 
+		util.plot(xs, ys_more_data, ['uniform, more data', 'power law, more data']) 
 
 	## plot both strategies together
 	cumulative_xs = [hypotheses, hypotheses, hypotheses, hypotheses]
 	cumulative_ys = [ys[0], ys[1], ys_more_data[0], ys_more_data[1]]
 	if showPlots == 'final' or showPlots == 'all':
-		plot(cumulative_xs, cumulative_ys, ['uniform', 'power law', 'uniform, more data', 'power law, more data'])
+		util.plot(cumulative_xs, cumulative_ys, ['uniform', 'power law', 'uniform, more data', 'power law, more data'])
 
 
 	### using percentile to analyze the data

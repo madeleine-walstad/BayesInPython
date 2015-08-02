@@ -33,8 +33,6 @@ class suite(pmf):
 		super().normalize()
 
 
-
-
 	def likelihood(self, data, hypothesis):
 		""" likelihood: calculates the likelihood [ p(D|H) ] for a given data and hypothesis, this is an abstract
 			method and must be implemented by a subclass
@@ -71,6 +69,41 @@ class suite(pmf):
 			prob = super().prob(hypothesis_name)
 			print(hypothesis_name, prob)
 
+
 	def makeCdf(self):
 		return super().makeCdf()
+
+
+	def mean(self, shouldPrint=False):
+		"""
+			returns the mean of the probabilities in this suite
+			if optional parameter shouldPrint is True it will print this value
+		"""
+		total = 0
+		for hypothesis in self.hypotheses:
+			if self.key_type == self.TYPE_INT:
+				hypothesis_name = hypothesis
+			else:
+				hypothesis_name = str(hypothesis)
+			prob = super().prob(hypothesis)
+			total += hypothesis_name * prob
+		if shouldPrint:
+			print(str(total))
+		return total
+
+
+	def get_probability_distribution(self):
+		"""
+			only works for suites with integer hypothesis names
+			returns a list of probabilities sorted by their corresponding hypothesis
+		"""
+		if self.key_type == self.TYPE_INT:
+			y = []
+			for h in sorted(self.hypotheses):
+				y.append(super().prob(h))
+			return y
+		else:
+			print("Calling this function on a suite with non-integer hypotheses is probably a bad idea.")
+			return None;
+
 
