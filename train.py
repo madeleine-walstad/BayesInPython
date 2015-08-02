@@ -61,8 +61,6 @@ class PowerTrain(Train):
 		self.hypotheses = hypotheses
 		self.key_type = suite.TYPE_INT
 		for hypothesis in hypotheses:
-			hypothesis_name = str(hypothesis)
-			value = hypothesis**(-alpha)
 			self.set(hypothesis, hypothesis**(-alpha))
 		self.normalize()
 
@@ -93,6 +91,9 @@ def plot(xs, ys, labels=[]):
 	mpl.legend(handles=plots)
 	mpl.show()
 
+def power_prior_function(x, alpha=1.0):
+	return x ** (-alpha)
+
 
 def main(showPlots='all'):
 
@@ -107,7 +108,7 @@ does the railroad have?""")
 
 
 	### STRATEGY 2 - power distrobution
-	train2 = PowerTrain(hypotheses)
+	train2 = PowerTrain(hypotheses, )
 	train2.update(60)
 	print("""Using the power rule and given that we have just seen a train marked\
 '60' and it is equally likely that the railroad has any number of trains 1...1000, how many trains\
@@ -134,7 +135,7 @@ does the railroad have?""")
 	## plot both strategies together
 	cumulative_xs = [hypotheses, hypotheses, hypotheses, hypotheses]
 	cumulative_ys = [ys[0], ys[1], ys_more_data[0], ys_more_data[1]]
-	if showPlots == 'final':
+	if showPlots == 'final' or showPlots == 'all':
 		plot(cumulative_xs, cumulative_ys, ['uniform', 'power law', 'uniform, more data', 'power law, more data'])
 
 
@@ -146,7 +147,8 @@ does the railroad have?""")
 
 
 if __name__ == '__main__':
-	showPlots = None
 	if len(sys.argv[1:]) > 0:
 		showPlots = sys.argv[1]
-	main(showPlots)
+		main(showPlots)
+	else:
+		main()

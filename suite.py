@@ -5,13 +5,19 @@ class suite(pmf):
 	TYPE_INT = 'integer'
 	TYPE_CUSTOM = 'custom'
 
-	def __init__(self, hypotheses=tuple()):
+	def basic_prior_function(self, hypothesis):
+		return 1
+
+	def __init__(self, hypotheses=tuple(), prior_function=None):
 		""" __init__: initializes the suite object and sets the pmf to hold the priors of each hypothesis
 
 			:param hypotheses: a tuple of objects that are strings or can be cast to strings and are comparable
 		"""
 		super().__init__()
 		self.hypotheses = hypotheses
+
+		if prior_function == None:
+			prior_function = self.basic_prior_function
 
 		if type(hypotheses[0]) == int:
 			self.key_type = self.TYPE_INT
@@ -20,11 +26,13 @@ class suite(pmf):
 
 		for hypothesis in hypotheses:
 			if self.key_type == self.TYPE_INT:
-				super().set(hypothesis, 1)
+				super().set(hypothesis, prior_function(hypothesis))
 			else:
 				hypothesis_name = str(hypothesis)
-				super().set(hypothesis_name, 1)
+				super().set(hypothesis_name, prior_function(hypothesis))
 		super().normalize()
+
+
 
 
 	def likelihood(self, data, hypothesis):
