@@ -2,6 +2,9 @@ from pmf import pmf
 
 class suite(pmf):
 
+	TYPE_INT = 'integer'
+	TYPE_CUSTOM = 'custom'
+
 	def __init__(self, hypotheses=tuple()):
 		""" __init__: initializes the suite object and sets the pmf to hold the priors of each hypothesis
 
@@ -9,9 +12,18 @@ class suite(pmf):
 		"""
 		super().__init__()
 		self.hypotheses = hypotheses
+
+		if type(hypotheses[0]) == int:
+			self.key_type = self.TYPE_INT
+		else:
+			self.key_type = self.TYPE_CUSTOM
+
 		for hypothesis in hypotheses:
-			hypothesis_name = str(hypothesis)
-			super().set(hypothesis_name, 1)
+			if self.key_type == self.TYPE_INT:
+				super().set(hypothesis, 1)
+			else:
+				hypothesis_name = str(hypothesis)
+				super().set(hypothesis_name, 1)
 		super().normalize()
 
 
@@ -32,7 +44,10 @@ class suite(pmf):
 		"""
 		for hypothesis in self.hypotheses:
 			l = self.likelihood(data, hypothesis)
-			hypothesis_name = str(hypothesis)
+			if self.key_type == self.TYPE_INT:
+				hypothesis_name = hypothesis
+			else:
+				hypothesis_name = str(hypothesis)
 			super().mult(hypothesis_name, l)
 		super().normalize()
 
@@ -41,7 +56,13 @@ class suite(pmf):
 		""" print: print out each hypothesis and its corresponding probability in the pmf
 		"""
 		for hypothesis in self.hypotheses:
-			hypothesis_name = str(hypothesis)
+			if self.key_type == self.TYPE_INT:
+				hypothesis_name = hypothesis
+			else:
+				hypothesis_name = str(hypothesis)
 			prob = super().prob(hypothesis_name)
 			print(hypothesis_name, prob)
+
+	def makeCdf(self):
+		return super().makeCdf()
 

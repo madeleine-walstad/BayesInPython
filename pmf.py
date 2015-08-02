@@ -1,3 +1,5 @@
+from cdf import cdf
+
 class pmf:
 
 	def __init__(self):
@@ -69,5 +71,26 @@ class pmf:
 		""" values: returns the dictionary of values
 		"""
 		return self.valuesDict
+
+	def makeCdf(self, name=None):
+		""" makeCdf: builds a cumulative distribution function from the pmf
+
+		:param (optional) name: a name for the new cdf, defaults to the name of this pmf if undefined
+		"""
+		if name == None:
+			name = self.name
+		xs = []
+		counts = []
+		running_total = 0
+		for value, prob in sorted(self.values()):
+			xs.append(value)
+			counts.append(running_total)
+		running_total = float(running_total)
+		probs = [count / running_total for count in counts]
+		return cdf(xs, probs, name)
+
+
+	def interval(self, start, end):
+		return self.percentile(5), self.percentile(95)
 
 

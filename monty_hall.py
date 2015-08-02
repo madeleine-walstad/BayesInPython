@@ -27,6 +27,9 @@ class door:
 	def __str__(self):
 		return self.name
 
+	def __hash__(self):
+		return int(self.name)
+
 def main():
 
 	door_a = door(door.DOOR_A)

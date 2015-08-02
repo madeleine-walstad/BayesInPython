@@ -3,7 +3,6 @@ from suite import suite
 class CookieProblem(suite):
 
 	def likelihood(self, data, bowl):
-		print(data)
 		for d in data:
 			if d == CookieBowl.FLAVOR_CHOCOLATE:
 				return bowl.getProbabilityChocolate()
@@ -49,7 +48,8 @@ def main():
 	bowl2 = CookieBowl('bowl2', 20, 20)
 
 	pmf = CookieProblem([bowl1, bowl2])
-	pmf.update(CookieBowl.FLAVOR_VANILLA)
+	data = [CookieBowl.FLAVOR_VANILLA]
+	pmf.update(data)
 
 	pmf.print()
 
