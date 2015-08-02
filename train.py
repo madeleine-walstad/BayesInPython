@@ -108,7 +108,7 @@ does the railroad have?""")
 
 
 	### STRATEGY 2 - power distrobution
-	train2 = PowerTrain(hypotheses, )
+	train2 = Train(hypotheses, power_prior_function)
 	train2.update(60)
 	print("""Using the power rule and given that we have just seen a train marked\
 '60' and it is equally likely that the railroad has any number of trains 1...1000, how many trains\
@@ -124,7 +124,7 @@ does the railroad have?""")
 	### with more data the spread between the uniform and power distributions is smaller
 	data = [30, 60, 90]
 	train3 = Train(hypotheses)
-	train4 = PowerTrain(hypotheses)
+	train4 = Train(hypotheses, power_prior_function)
 	for d in data:
 		train3.update(d)
 		train4.update(d)
